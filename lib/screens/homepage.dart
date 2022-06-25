@@ -53,7 +53,9 @@ class _HomepageState extends State<Homepage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => Taskpage(),
+                                      builder: (context) => Taskpage(
+                                        id: snapshot.data![index].id,
+                                      ),
                                     ),
                                   );
                                 },
@@ -76,7 +78,10 @@ class _HomepageState extends State<Homepage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Taskpage()),
+                      MaterialPageRoute(
+                          builder: (context) => Taskpage(
+                                id: 0,
+                              )),
                     ).then((value) => null);
                   },
                   child: Container(
