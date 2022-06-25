@@ -108,7 +108,7 @@ class _TaskpageState extends State<Taskpage> {
                   ),
                   FutureBuilder(
                     initialData: [],
-                    future: _dbHelper.getTodos(_taskId),
+                    future: _dbHelper.getTodo(_taskId),
                     builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
                       return Expanded(
                         child: ListView.builder(
