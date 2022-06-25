@@ -7,7 +7,7 @@ import 'models/todo.dart';
 class DatabaseHelper {
   Future<Database> database() async {
     return openDatabase(
-      join(await getDatabasesPath(), 'todofuransu.db'),
+      join(await getDatabasesPath(), 'todofurans.db'),
       onCreate: (db, version) async {
         await db.execute(
             "CREATE TABLE tasks(id INTEGER PRIMARY KEY, title TEXT, description TEXT)");
@@ -47,7 +47,7 @@ class DatabaseHelper {
   Future<List<Todo>> getTodo(int taskId) async {
     Database _db = await database();
     List<Map<String, dynamic>> todoMap =
-        await _db.rawQuery('SELECT * todo WHERE taskId = $taskId');
+        await _db.rawQuery("SELECT * FROM todo WHERE taskId = $taskId");
     return List.generate(todoMap.length, (index) {
       return Todo(
         id: todoMap[index]['id'],
