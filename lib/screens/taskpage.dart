@@ -14,6 +14,16 @@ class Taskpage extends StatefulWidget {
 }
 
 class _TaskpageState extends State<Taskpage> {
+  String _taskTitle = "";
+
+  @override
+  void initState() {
+    if (widget.task != null) {
+      _taskTitle = widget.task!.title!;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,17 +58,24 @@ class _TaskpageState extends State<Taskpage> {
                           child: TextField(
                             onSubmitted: (value) async {
                               if (value != "") {
-                                //Mengecek apakah judul yang dimasukan kosong atau tidak.
-                                DatabaseHelper _dbHelper =
-                                    DatabaseHelper(); //menyimpan data kalau judul yang dimasukkan berisi value.
+                                //Mengecek apakah task kosong.
+                                if (widget.task == null) {
+                                  //Mengecek apakah judul yang dimasukan kosong atau tidak.
+                                  DatabaseHelper _dbHelper =
+                                      DatabaseHelper(); //menyimpan data kalau judul yang dimasukkan berisi value.
 
-                                Task _newTask = Task(
-                                  title: value,
-                                ); //membuat instance task
+                                  Task _newTask = Task(
+                                    title: value,
+                                  ); //membuat instance task
 
-                                await _dbHelper.insertTask(_newTask);
+                                  await _dbHelper.insertTask(_newTask);
+                                } else {
+                                  print("Update dulu ges tasknya..");
+                                }
                               }
                             },
+                            controller: TextEditingController()
+                              ..text = _taskTitle,
                             decoration: InputDecoration(
                               hintText: "Masukan Judul...",
                               border: InputBorder.none,
@@ -88,16 +105,6 @@ class _TaskpageState extends State<Taskpage> {
                   ),
                   TodoWidget(
                     text: "Mengerjakan UAS Pemrograman Mobile sampai mati.",
-                    isDone: false,
-                  ),
-                  TodoWidget(
-                    text: "Menyiapkan presentasi UAS Pemrograman Mobile.",
-                    isDone: false,
-                  ),
-                  TodoWidget(
-                    isDone: true,
-                  ),
-                  TodoWidget(
                     isDone: false,
                   ),
                 ],
