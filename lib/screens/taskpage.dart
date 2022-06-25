@@ -133,10 +133,12 @@ class _TaskpageState extends State<Taskpage> {
                       ),
                       child: TextField(
                         autocorrect: false,
-                        onSubmitted: (value) {
+                        onSubmitted: (value) async {
                           if (value != "") {
                             if (_taskId != 0) {
-                              _dbHelper.updateTaskDescription(_taskId, value);
+                              await _dbHelper.updateTaskDescription(
+                                  _taskId, value);
+                              _taskDescription = value;
                             }
                           }
                           _todoFocus.requestFocus();
@@ -224,12 +226,12 @@ class _TaskpageState extends State<Taskpage> {
                               controller: TextEditingController()..text = "",
                               onSubmitted: (value) async {
                                 if (value != "") {
-                                  if (widget.task != null) {
+                                  if (_taskId != 0) {
                                     DatabaseHelper _dbHelper = DatabaseHelper();
                                     Todo _newTodo = Todo(
                                       title: value,
                                       isDone: 0,
-                                      taskId: widget.task!.id,
+                                      taskId: _taskId,
                                     );
                                     await _dbHelper.insertTodo(_newTodo);
                                     setState(() {});

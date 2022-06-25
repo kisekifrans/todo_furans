@@ -7,7 +7,7 @@ import 'models/todo.dart';
 class DatabaseHelper {
   Future<Database> database() async {
     return openDatabase(
-      join(await getDatabasesPath(), 'todofuransu.db'),
+      join(await getDatabasesPath(), 'furansutodo.db'),
       onCreate: (db, version) async {
         await db.execute(
             "CREATE TABLE tasks(id INTEGER PRIMARY KEY, title TEXT, description TEXT)");
