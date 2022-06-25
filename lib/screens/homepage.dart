@@ -54,7 +54,7 @@ class _HomepageState extends State<Homepage> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => Taskpage(
-                                        id: snapshot.data![index].id,
+                                        task: snapshot.data![index],
                                       ),
                                     ),
                                   );
@@ -80,7 +80,7 @@ class _HomepageState extends State<Homepage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => Taskpage(
-                                id: 0,
+                                task: null,
                               )),
                     ).then((value) => null);
                   },
