@@ -44,7 +44,7 @@ class DatabaseHelper {
     });
   }
 
-  Future<List<Todo>> getTodos(int taskId) async {
+  Future<List<Todo>> getTodo(int taskId) async {
     Database _db = await database();
     List<Map<String, dynamic>> todoMap =
         await _db.rawQuery('SELECT * todo WHERE taskId = $taskId');
