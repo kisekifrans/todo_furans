@@ -20,11 +20,19 @@ class DatabaseHelper {
     );
   }
 
-  Future<void> insertTask(Task task) async {
+  Future<int> insertTask(Task task) async {
+    int taskId = 0;
     Database _db = await database();
-    await _db.insert('tasks', task.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await _db
+        .insert('tasks', task.toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace)
+        .then((value) {
+      taskId = value;
+    });
+    return taskId;
   }
+
+  Future<void>
 
   Future<void> insertTodo(Todo todo) async {
     Database _db = await database();
