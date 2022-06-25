@@ -1,7 +1,6 @@
-import 'package:flutter/src/widgets/framework.dart';
-
 import 'package:flutter/material.dart';
 import 'package:todo_furans/database_helper.dart';
+import 'package:todo_furans/models/task.dart';
 import 'package:todo_furans/screens/taskpage.dart';
 import 'package:todo_furans/screens/widgets.dart';
 
@@ -42,7 +41,8 @@ class _HomepageState extends State<Homepage> {
                     child: FutureBuilder(
                       initialData: [],
                       future: _dbHelper.getTasks(),
-                      builder: (context, AsyncSnapshot<List<Task>> snapshot) {
+                      builder:
+                          (context, AsyncSnapshot<List<dynamic>> snapshot) {
                         return ScrollConfiguration(
                           behavior: NoGlowBehaviour(),
                           child: ListView.builder(

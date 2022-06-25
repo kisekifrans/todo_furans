@@ -4,6 +4,7 @@ import 'package:todo_furans/screens/widgets.dart';
 
 import '../database_helper.dart';
 import '../models/task.dart';
+import '../models/todo.dart';
 
 class Taskpage extends StatefulWidget {
   final Task? task;
@@ -14,12 +15,16 @@ class Taskpage extends StatefulWidget {
 }
 
 class _TaskpageState extends State<Taskpage> {
+  DatabaseHelper _dbHelper =
+      DatabaseHelper(); //menyimpan data kalau judul yang dimasukkan berisi value.
+  int _taskId = 0;
   String _taskTitle = "";
 
   @override
   void initState() {
     if (widget.task != null) {
       _taskTitle = widget.task!.title!;
+      _taskId = widget.task!.id!;
     }
     super.initState();
   }
@@ -61,8 +66,6 @@ class _TaskpageState extends State<Taskpage> {
                                 //Mengecek apakah task kosong.
                                 if (widget.task == null) {
                                   //Mengecek apakah judul yang dimasukan kosong atau tidak.
-                                  DatabaseHelper _dbHelper =
-                                      DatabaseHelper(); //menyimpan data kalau judul yang dimasukkan berisi value.
 
                                   Task _newTask = Task(
                                     title: value,
@@ -103,9 +106,82 @@ class _TaskpageState extends State<Taskpage> {
                           )),
                     ),
                   ),
-                  TodoWidget(
-                    text: "Mengerjakan UAS Pemrograman Mobile sampai mati.",
-                    isDone: false,
+                  FutureBuilder(
+                    initialData: [],
+                    future: _dbHelper.getTodos(_taskId),
+                    builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                      return Expanded(
+                        child: ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                //Biar tercentang..
+                              },
+                              child: TodoWidget(
+                                text: snapshot.data![index].title,
+                                isDone: snapshot.data![index].isDone == 0
+                                    ? false
+                                    : true,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 20.0,
+                          height: 20.0,
+                          margin: EdgeInsets.only(
+                            right: 10.0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(5.0),
+                            border: Border.all(
+                              color: Color(0xFF86829D),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Image(
+                            image: AssetImage(
+                              'assets/images/check_icon.png',
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: TextField(
+                            onSubmitted: (value) async {
+                              if (value != "") {
+                                if (widget.task != null) {
+                                  DatabaseHelper _dbHelper = DatabaseHelper();
+                                  Todo _newTodo = Todo(
+                                    title: value,
+                                    isDone: 0,
+                                    taskId: widget.task!.id,
+                                  );
+                                  await _dbHelper.insertTodo(_newTodo);
+                                  setState(() {});
+                                } else {
+                                  print("muncul kalau gamau");
+                                }
+                              }
+                            },
+                            decoration: InputDecoration(
+                              hintText: "Masukan Todo's...",
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
