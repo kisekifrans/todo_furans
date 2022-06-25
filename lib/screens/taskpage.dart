@@ -6,6 +6,9 @@ import '../database_helper.dart';
 import '../models/task.dart';
 
 class Taskpage extends StatefulWidget {
+  final int? id;
+  Taskpage({this.id});
+
   @override
   State<Taskpage> createState() => _TaskpageState();
 }
