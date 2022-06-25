@@ -19,6 +19,7 @@ class _TaskpageState extends State<Taskpage> {
       DatabaseHelper(); //menyimpan data kalau judul yang dimasukkan berisi value.
   int _taskId = 0;
   String _taskTitle = "";
+  String _taskDescription = "";
 
   late FocusNode _titleFocus;
   late FocusNode _descriptionFocus;
@@ -32,6 +33,7 @@ class _TaskpageState extends State<Taskpage> {
       _contentVisible = true;
       _taskTitle = widget.task!.title!;
       _taskId = widget.task!.id!;
+      _taskDescription = widget.task!.description!;
     }
 
     _titleFocus = FocusNode();
@@ -82,6 +84,7 @@ class _TaskpageState extends State<Taskpage> {
                         ),
                         Expanded(
                           child: TextField(
+                            autocorrect: false,
                             focusNode: _titleFocus,
                             onSubmitted: (value) async {
                               if (value != "") {
@@ -100,7 +103,8 @@ class _TaskpageState extends State<Taskpage> {
                                     _taskTitle = value;
                                   });
                                 } else {
-                                  print("Update dulu ges tasknya..");
+                                  await _dbHelper.updateTaskTitle(
+                                      _taskId, value);
                                 }
                                 _descriptionFocus.requestFocus();
                               }
@@ -128,10 +132,17 @@ class _TaskpageState extends State<Taskpage> {
                         bottom: 12.0,
                       ),
                       child: TextField(
+                        autocorrect: false,
                         onSubmitted: (value) {
+                          if (value != "") {
+                            if (_taskId != 0) {
+                              _dbHelper.updateTaskDescription(_taskId, value);
+                            }
+                          }
                           _todoFocus.requestFocus();
                         },
-                        focusNode: _descriptionFocus,
+                        controller: TextEditingController()
+                          ..text = _taskDescription,
                         decoration: InputDecoration(
                           hintText: "Masukan Deskripsi...",
                           border: InputBorder.none,
@@ -154,7 +165,15 @@ class _TaskpageState extends State<Taskpage> {
                             itemCount: snapshot.data!.length,
                             itemBuilder: (context, index) {
                               return GestureDetector(
-                                onTap: () {
+                                onTap: () async {
+                                  if (snapshot.data![index].isDone == 0) {
+                                    await _dbHelper.updateTodoChecklist(
+                                        snapshot.data![index].id, 1);
+                                  } else {
+                                    await _dbHelper.updateTodoChecklist(
+                                        snapshot.data![index].id, 0);
+                                  }
+                                  setState(() {});
                                   //Biar tercentang..
                                 },
                                 child: TodoWidget(
@@ -200,7 +219,9 @@ class _TaskpageState extends State<Taskpage> {
                           ),
                           Expanded(
                             child: TextField(
+                              autocorrect: false,
                               focusNode: _todoFocus,
+                              controller: TextEditingController()..text = "",
                               onSubmitted: (value) async {
                                 if (value != "") {
                                   if (widget.task != null) {
@@ -212,6 +233,7 @@ class _TaskpageState extends State<Taskpage> {
                                     );
                                     await _dbHelper.insertTodo(_newTodo);
                                     setState(() {});
+                                    _todoFocus.requestFocus();
                                   } else {
                                     print("muncul kalau gamau");
                                   }
@@ -235,11 +257,11 @@ class _TaskpageState extends State<Taskpage> {
                   bottom: 24.0,
                   right: 24.0,
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Taskpage()),
-                      );
+                    onTap: () async {
+                      if (_taskId != 0) {
+                        await _dbHelper.deleteTask(_taskId);
+                        Navigator.pop(context);
+                      }
                     },
                     child: Container(
                       width: 60.0,

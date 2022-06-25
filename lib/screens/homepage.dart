@@ -57,10 +57,14 @@ class _HomepageState extends State<Homepage> {
                                         task: snapshot.data![index],
                                       ),
                                     ),
-                                  );
+                                  ).then((value) {
+                                    setState(() {});
+                                  });
                                 },
                                 child: TaskCardWidget(
                                   title: snapshot.data![index].title,
+                                  description:
+                                      snapshot.data![index].description,
                                 ),
                               );
                             },
@@ -79,10 +83,13 @@ class _HomepageState extends State<Homepage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Taskpage(
-                                task: null,
-                              )),
-                    ).then((value) => null);
+                        builder: (context) => Taskpage(
+                          task: null,
+                        ),
+                      ),
+                    ).then((value) {
+                      setState(() {});
+                    });
                   },
                   child: Container(
                     width: 60.0,

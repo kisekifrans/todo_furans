@@ -89,12 +89,14 @@ class TodoWidget extends StatelessWidget {
               ),
             ),
           ),
-          Text(
-            text ?? "(Belum ada Judul!)",
-            style: TextStyle(
-              color: isDone ? Color(0xFFEF9F9F) : Color(0xFF86829D),
-              fontSize: 16.0,
-              fontWeight: isDone ? FontWeight.bold : FontWeight.normal,
+          Flexible(
+            child: Text(
+              text ?? "(Belum ada Judul!)",
+              style: TextStyle(
+                color: isDone ? Color(0xFFEF9F9F) : Color(0xFF86829D),
+                fontSize: 16.0,
+                fontWeight: isDone ? FontWeight.bold : FontWeight.normal,
+              ),
             ),
           ),
         ],

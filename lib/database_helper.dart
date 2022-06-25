@@ -7,7 +7,7 @@ import 'models/todo.dart';
 class DatabaseHelper {
   Future<Database> database() async {
     return openDatabase(
-      join(await getDatabasesPath(), 'todofurans.db'),
+      join(await getDatabasesPath(), 'todofuransu.db'),
       onCreate: (db, version) async {
         await db.execute(
             "CREATE TABLE tasks(id INTEGER PRIMARY KEY, title TEXT, description TEXT)");
@@ -32,7 +32,16 @@ class DatabaseHelper {
     return taskId;
   }
 
-  Future<void>
+  Future<void> updateTaskTitle(int id, String title) async {
+    Database _db = await database();
+    await _db.rawUpdate("UPDATE tasks SET title = '$title' WHERE id = '$id'");
+  }
+
+  Future<void> updateTaskDescription(int id, String description) async {
+    Database _db = await database();
+    await _db.rawUpdate(
+        "UPDATE tasks SET description = '$description' WHERE id = '$id'");
+  }
 
   Future<void> insertTodo(Todo todo) async {
     Database _db = await database();
@@ -64,5 +73,16 @@ class DatabaseHelper {
         isDone: todoMap[index]['isDone'],
       );
     });
+  }
+
+  Future<void> updateTodoChecklist(int id, int isDone) async {
+    Database _db = await database();
+    await _db.rawUpdate("UPDATE todo SET isDone = '$isDone' WHERE id = '$id'");
+  }
+
+  Future<void> deleteTask(int id) async {
+    Database _db = await database();
+    await _db.rawDelete("DELETE FROM tasks WHERE id = '$id'");
+    await _db.rawDelete("DELETE FROM todo WHERE taskId = '$id'");
   }
 }
